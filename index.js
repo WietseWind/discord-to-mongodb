@@ -2,7 +2,7 @@ const Discord = require("discord.js")
 const client = new Discord.Client()
 const MongoClient = require('mongodb').MongoClient
 
-MongoClient.connect('mongodb://mongodbserver:27017', (err, mongo) => {
+MongoClient.connect('mongodb://127.0.0.1:27017', (err, mongo) => {
   if (err) {
     console.log(err)
     return
@@ -23,8 +23,8 @@ MongoClient.connect('mongodb://mongodbserver:27017', (err, mongo) => {
       userName: msg.author.username,
       message: msg.content,
       words: msg.content.trim().toLowerCase().split(' ').filter((word) => {
-        return word.match(/^[a-z]{3,16}$/)
-      })
+        return word.replace(/[,\.!()]/g, ' ').trim().match(/^[a-z]{3,16}$/)
+      }).map((r) => { return r.replace(/[,\.!()]/g, ' ').trim() })
     })
     console.log(msg.channel.name, msg.author.id, msg.author.username)
   })
